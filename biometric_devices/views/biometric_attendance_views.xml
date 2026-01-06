@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="attendance_log_search" model="ir.ui.view">
+        <field name="model">biometric.attendance.log</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="device_id"/>
+                <filter name="pending" string="Pending" domain="[('state','=','pending')]"/>
+                <filter name="processed" string="Processed" domain="[('state','=','processed')]"/>
+                <filter name="error" string="Error" domain="[('state','=','error')]"/>
+                <group>
+                    <filter string="Device" name="groupby_device" context="{'group_by':'device_id'}"/>
+                    <filter string="Employee" name="groupby_employee" context="{'group_by':'employee_id'}"/>
+                    <filter string="Type" name="groupby_type" context="{'group_by':'punch_type'}"/>
+                    <separator/>
+                    <filter name="groupby_punch_time" context="{'group_by':'punch_time'}" string="Punch Time"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="attendance_log_tree" model="ir.ui.view">
+        <field name="model">biometric.attendance.log</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="punch_time"/>
+                <field name="employee_id"/>
+                <field name="device_id"/>
+                <field name="punch_type"/>
+                <field name="state" widget="badge" decoration-info="state=='pending'"
+                       decoration-success="state=='processed'" decoration-danger="state=='error'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="attendance_log_form" model="ir.ui.view">
+        <field name="model">biometric.attendance.log</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="punch_type"/>
+                        </group>
+                        <group>
+                            <field name="device_id"/>
+                            <field name="punch_time"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Error">
+                            <field name="error_message" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

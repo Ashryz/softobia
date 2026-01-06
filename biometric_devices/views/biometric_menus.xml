@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem id="menu_biometric_root"
+              name="Biometric"
+              parent="hr_attendance.menu_hr_attendance_root"/>
+
+    <record id="action_biometric_devices" model="ir.actions.act_window">
+        <field name="name">Devices</field>
+        <field name="res_model">biometric.device</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new device
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_biometric_devices"
+              parent="menu_biometric_root"
+              action="action_biometric_devices"
+              name="Devices"/>
+
+
+    <record id="action_biometric_logs" model="ir.actions.act_window">
+        <field name="name">Attendance Logs</field>
+        <field name="res_model">biometric.attendance.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new Attendance
+            </p>
+        </field>
+    </record>
+    <menuitem id="menu_biometric_logs"
+              parent="menu_biometric_root"
+              action="action_biometric_logs"
+              name="Attendance Logs"/>
+</odoo>
