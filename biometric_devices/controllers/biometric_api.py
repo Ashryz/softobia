@@ -1,18 +1,18 @@
 from odoo import http
 from odoo.http import request
 from datetime import datetime
+import json
 
 class BiometricAPI(http.Controller):
 
     @http.route('/api/biometric/attendance', type='jsonrpc', auth='public', methods=['POST'],csrf=False)
     def push_attendance(self, **payload):
-
-        serial = payload.get('device_serial')
-        punches = payload.get('punches', [])
-
+        vals = json.loads(request.httprequest.data.decode())
+        serial = vals.get('device_serial')
+        punches = vals.get('punches', [])
         device = request.env['biometric.device'].sudo().search([
             ('serial_number', '=', serial),
-            ('is_active', '=', True)
+            ('active', '=', True)
         ], limit=1)
 
         if not device:
@@ -31,7 +31,7 @@ class BiometricAPI(http.Controller):
                 ], limit=1)
 
                 if not emp:
-                    raise Exception('Employee not found')
+                    raise Exception('Employee not found with pin %s ' % punch.get('pin'))
 
                 Log.create({
                     'device_id': device.id,
@@ -45,7 +45,7 @@ class BiometricAPI(http.Controller):
 
         device.write({
             'last_sync': datetime.now(),
-            'status': 'online'
+            'state': 'online'
         })
 
         return {

@@ -20,10 +20,11 @@ class BiometricDevice(models.Model):
         ('online', 'Online')
     ],default='offline')
 
-    _sql_constraints = [
-        ('serial_unique', 'unique(serial_number)',
-         'Device serial number must be unique')
-    ]
+    _check_serial_number = models.Constraint(
+        'unique (serial_number)',
+        'Device serial number must be unique, this one is already assigned to another device.'
+    )
+
 
     @api.constrains('serial_number')
     def _check_serial_number(self):
@@ -44,3 +45,12 @@ class BiometricDevice(models.Model):
             'state': 'online',
             'last_sync': datetime.now()
         })
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': _("Device Connection Established!"),
+                'next': {'type': 'ir.actions.act_window_close'},
+            }
+        }
